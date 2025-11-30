@@ -38,20 +38,20 @@
   <div class="header" id="form-header">ChatBot 登入</div>
 
   <!-- 登入表單 -->
-  <!-- <div class="form-section" id="login-form">
+  <div class="form-section" id="login-form">
     <input id="login-username" type="text" placeholder="帳號"/>
     <input id="login-password" type="password" placeholder="密碼"/>
     <button class="login-btn" onclick="doLogin()">登入</button>
     <div class="switch-link" onclick="showRegister()">沒有帳號？註冊</div>
-  </div> -->
+  </div>
 
   <!-- 註冊表單 -->
-  <!-- <div class="form-section" id="register-form" style="display:none;">
+  <div class="form-section" id="register-form" style="display:none;">
     <input id="reg-username" type="text" placeholder="帳號"/>
     <input id="reg-password" type="password" placeholder="密碼"/>
     <button class="register-btn" onclick="doRegister()">註冊</button>
     <div class="switch-link" onclick="showLogin()">已經有帳號？登入</div>
-  </div> -->
+  </div>
 
   <!-- 聊天區 -->
   <div class="chat-section" id="chat-section">
@@ -66,64 +66,64 @@
 <script>
 // let token = localStorage.getItem("access_token") || "";
 let token = "";  // 不使用登入 token
-// const API = "http://127.0.0.1:8000";  // ← 統一使用 127.0.0.1
-const API = "https://wk10-auth.onrender.com";  // ← 加這行
+const API = "http://127.0.0.1:8000";  // ← 統一使用 127.0.0.1
+// const API = "https://wk10-auth.onrender.com";  // ← 加這行
 
-// function showRegister() {
-//   document.getElementById("login-form").style.display = "none";
-//   document.getElementById("register-form").style.display = "flex";
-//   document.getElementById("form-header").textContent = "ChatBot 註冊";
-// }
+function showRegister() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("register-form").style.display = "flex";
+  document.getElementById("form-header").textContent = "ChatBot 註冊";
+}
 
-// function showLogin() {
-//   document.getElementById("login-form").style.display = "flex";
-//   document.getElementById("register-form").style.display = "none";
-//   document.getElementById("form-header").textContent = "ChatBot 登入";
-// }
+function showLogin() {
+  document.getElementById("login-form").style.display = "flex";
+  document.getElementById("register-form").style.display = "none";
+  document.getElementById("form-header").textContent = "ChatBot 登入";
+}
 
-// function showChat() {
-//   document.getElementById("login-form").style.display = "none";
-//   document.getElementById("register-form").style.display = "none";
-//   document.getElementById("form-header").style.display = "none";
-//   document.getElementById("chat-section").style.display = "flex";
-// }
+function showChat() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("register-form").style.display = "none";
+  document.getElementById("form-header").style.display = "none";
+  document.getElementById("chat-section").style.display = "flex";
+}
 
-// // 登入
-// async function doLogin() {
-//   const u = document.getElementById("login-username").value;
-//   const p = document.getElementById("login-password").value;
-//   if(!u || !p) return alert("請輸入帳號密碼");
+// 登入
+async function doLogin() {
+  const u = document.getElementById("login-username").value;
+  const p = document.getElementById("login-password").value;
+  if(!u || !p) return alert("請輸入帳號密碼");
 
-//   const form = new FormData();
-//   form.append("username", u);
-//   form.append("password", p);
+  const form = new FormData();
+  form.append("username", u);
+  form.append("password", p);
 
-//   const r = await fetch(`${API}/login`,{ method:"POST", body:form }); // ← 改這裡
-//   if(!r.ok) return alert("登入失敗");
+  const r = await fetch(`${API}/login`,{ method:"POST", body:form }); // ← 改這裡
+  if(!r.ok) return alert("登入失敗");
 
-//   const data = await r.json();
-//   token = data.access_token;
-//   localStorage.setItem("access_token", token);
-//   alert("登入成功");
+  const data = await r.json();
+  token = data.access_token;
+  localStorage.setItem("access_token", token);
+  alert("登入成功");
 
-//   showChat();
-//   await loadHistory();
-// }
+  showChat();
+  await loadHistory();
+}
 
-// // 註冊
-// async function doRegister() {
-//   const u = document.getElementById("reg-username").value;
-//   const p = document.getElementById("reg-password").value;
-//   if(!u || !p) return alert("請輸入帳號密碼");
+// 註冊
+async function doRegister() {
+  const u = document.getElementById("reg-username").value;
+  const p = document.getElementById("reg-password").value;
+  if(!u || !p) return alert("請輸入帳號密碼");
 
-//   const form = new FormData();
-//   form.append("username", u);
-//   form.append("password", p);
+  const form = new FormData();
+  form.append("username", u);
+  form.append("password", p);
   
-//   const r = await fetch(`${API}/register`,{ method:"POST", body:form }); // ← 改這裡
-//   if(r.ok) { alert("註冊成功，請登入"); showLogin(); }
-//   else { alert("註冊失敗"); }
-// }
+  const r = await fetch(`${API}/register`,{ method:"POST", body:form }); // ← 改這裡
+  if(r.ok) { alert("註冊成功，請登入"); showLogin(); }
+  else { alert("註冊失敗"); }
+}
 
 // 聊天相關
 function addBubble(text, who="ai") {
@@ -167,24 +167,23 @@ async function sendMsg() {
 // 直接顯示聊天區
 document.getElementById("chat-section").style.display = "flex";
 
-// async function loadHistory() {
-//   const r = await fetch(`${API}/history`,{  // ← 改這裡
-//     headers:{ "Authorization":"Bearer "+token }
-//   });
+async function loadHistory() {
+  const r = await fetch(`${API}/history`,{  // ← 改這裡
+    headers:{ "Authorization":"Bearer "+token }
+  });
 
-//   if(!r.ok) return;
-//   const data = await r.json();
-//   const win = document.getElementById("chat-window");
-//   win.innerHTML="";
+  if(!r.ok) return;
+  const data = await r.json();
+  const win = document.getElementById("chat-window");
+  win.innerHTML="";
 
-//   for(const m of data.history){ 
-//     addBubble(m.content, m.role==="user"?"user":"ai");
-//   }
-// }
+  for(const m of data.history){ 
+    addBubble(m.content, m.role==="user"?"user":"ai");
+  }
+}
 
-// // 如果已登入
-// if(token) { showChat(); loadHistory(); }
+// 如果已登入
+if(token) { showChat(); loadHistory(); }
 </script>
 </body>
 </html>
-

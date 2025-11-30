@@ -1,0 +1,189 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<title>ChatBot 登入 / 註冊</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+  body { font-family: Inter, Arial; background:#f0f2f5; margin:0; display:flex; justify-content:center; align-items:center; height:100vh; }
+  .container { width:360px; background:white; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.1); overflow:hidden; }
+
+  /* Header 顯示登入 / 註冊 */
+  .header { padding:20px; text-align:center; font-size:20px; font-weight:600; border-bottom:1px solid #ddd; }
+
+  /* 表單 */
+  .form-section { padding:20px; display:flex; flex-direction:column; gap:12px; }
+  .form-section input { padding:12px; border-radius:6px; border:1px solid #ccc; font-size:14px; width:100%; box-sizing:border-box; }
+  .form-section button { padding:12px; border-radius:6px; border:none; font-size:16px; cursor:pointer; }
+  .login-btn { background:#1877f2; color:white; }
+  .register-btn { background:#42b72a; color:white; }
+
+  .switch-link { text-align:center; font-size:14px; color:#1877f2; cursor:pointer; margin-top:8px; }
+
+  /* Chat 內容 */
+  .chat-section { display:none; flex-direction:column; height:400px; }
+  #chat-window { flex:1; padding:16px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:linear-gradient(180deg,#fafafa,#fff 60%); }
+  .bubble { max-width:78%; padding:12px 14px; border-radius:12px; white-space:pre-wrap; }
+  .user { margin-left:auto; background:#1877f2; color:white; border-bottom-right-radius:4px; }
+  .ai { margin-right:auto; background:#f1f1f5; color:#111; border-bottom-left-radius:4px; border:1px solid #e6e6ea; }
+  .input-area { padding:12px; border-top:1px solid #eee; display:flex; gap:8px; }
+  #msg { flex:1; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-size:15px; outline:none; }
+  .btn-send { padding:10px 14px; border-radius:8px; background:#1877f2; color:white; border:none; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header" id="form-header">ChatBot 登入</div>
+
+  <!-- 登入表單 -->
+  <!-- <div class="form-section" id="login-form">
+    <input id="login-username" type="text" placeholder="帳號"/>
+    <input id="login-password" type="password" placeholder="密碼"/>
+    <button class="login-btn" onclick="doLogin()">登入</button>
+    <div class="switch-link" onclick="showRegister()">沒有帳號？註冊</div>
+  </div> -->
+
+  <!-- 註冊表單 -->
+  <!-- <div class="form-section" id="register-form" style="display:none;">
+    <input id="reg-username" type="text" placeholder="帳號"/>
+    <input id="reg-password" type="password" placeholder="密碼"/>
+    <button class="register-btn" onclick="doRegister()">註冊</button>
+    <div class="switch-link" onclick="showLogin()">已經有帳號？登入</div>
+  </div> -->
+
+  <!-- 聊天區 -->
+  <div class="chat-section" id="chat-section">
+    <div id="chat-window"></div>
+    <div class="input-area">
+      <input id="msg" placeholder="輸入訊息，按 Enter 送出..." />
+      <button class="btn-send" onclick="sendMsg()">送出</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// let token = localStorage.getItem("access_token") || "";
+let token = "";  // 不使用登入 token
+const API = "http://127.0.0.1:8000";  // ← 統一使用 127.0.0.1
+// const API = "https://wk10-auth.onrender.com";  // ← 加這行
+
+// function showRegister() {
+//   document.getElementById("login-form").style.display = "none";
+//   document.getElementById("register-form").style.display = "flex";
+//   document.getElementById("form-header").textContent = "ChatBot 註冊";
+// }
+
+// function showLogin() {
+//   document.getElementById("login-form").style.display = "flex";
+//   document.getElementById("register-form").style.display = "none";
+//   document.getElementById("form-header").textContent = "ChatBot 登入";
+// }
+
+// function showChat() {
+//   document.getElementById("login-form").style.display = "none";
+//   document.getElementById("register-form").style.display = "none";
+//   document.getElementById("form-header").style.display = "none";
+//   document.getElementById("chat-section").style.display = "flex";
+// }
+
+// // 登入
+// async function doLogin() {
+//   const u = document.getElementById("login-username").value;
+//   const p = document.getElementById("login-password").value;
+//   if(!u || !p) return alert("請輸入帳號密碼");
+
+//   const form = new FormData();
+//   form.append("username", u);
+//   form.append("password", p);
+
+//   const r = await fetch(`${API}/login`,{ method:"POST", body:form }); // ← 改這裡
+//   if(!r.ok) return alert("登入失敗");
+
+//   const data = await r.json();
+//   token = data.access_token;
+//   localStorage.setItem("access_token", token);
+//   alert("登入成功");
+
+//   showChat();
+//   await loadHistory();
+// }
+
+// // 註冊
+// async function doRegister() {
+//   const u = document.getElementById("reg-username").value;
+//   const p = document.getElementById("reg-password").value;
+//   if(!u || !p) return alert("請輸入帳號密碼");
+
+//   const form = new FormData();
+//   form.append("username", u);
+//   form.append("password", p);
+  
+//   const r = await fetch(`${API}/register`,{ method:"POST", body:form }); // ← 改這裡
+//   if(r.ok) { alert("註冊成功，請登入"); showLogin(); }
+//   else { alert("註冊失敗"); }
+// }
+
+// 聊天相關
+function addBubble(text, who="ai") {
+  const win = document.getElementById("chat-window");
+  const div = document.createElement("div");
+  div.className = "bubble "+(who==="user"?"user":"ai");
+  div.textContent = text;
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+
+document.getElementById("msg").addEventListener("keydown", e => {
+  if(e.key==="Enter"){ e.preventDefault(); sendMsg(); }
+});
+
+async function sendMsg() {
+  const input = document.getElementById("msg");
+  const text = input.value.trim();
+  if(!text) return; 
+
+  addBubble(text,"user");
+  input.value="";
+
+  const r = await fetch(`${API}/chat`,{    // ← 改這裡
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    // headers:{ "Content-Type":"application/json","Authorization":"Bearer "+token },
+    body: JSON.stringify({ messages:[{role:"user",content:text}], save_history:true })
+  });
+
+  if(!r.ok){
+    const err = await r.json().catch(()=>({detail:"Network error"}));
+    addBubble("伺服器錯誤: "+(err.detail||"unknown"),"ai");
+    return;
+  }
+
+  const data = await r.json();
+  addBubble(data.reply,"ai");
+}
+
+// 直接顯示聊天區
+document.getElementById("chat-section").style.display = "flex";
+
+// async function loadHistory() {
+//   const r = await fetch(`${API}/history`,{  // ← 改這裡
+//     headers:{ "Authorization":"Bearer "+token }
+//   });
+
+//   if(!r.ok) return;
+//   const data = await r.json();
+//   const win = document.getElementById("chat-window");
+//   win.innerHTML="";
+
+//   for(const m of data.history){ 
+//     addBubble(m.content, m.role==="user"?"user":"ai");
+//   }
+// }
+
+// // 如果已登入
+// if(token) { showChat(); loadHistory(); }
+</script>
+</body>
+</html>

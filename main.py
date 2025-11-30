@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Session, select
 from db import init_db, engine, get_session
 from models import User
 from auth import hash_password, verify_password, create_access_token, oauth2_scheme
-from chat import router as chat_router
+from api.chat import router as chat_router
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
@@ -55,4 +55,5 @@ async def root():
 
 # include chat router, protected endpoints will use get_current_user
 app.include_router(chat_router, prefix="", tags=["chat"])
+
 

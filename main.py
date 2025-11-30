@@ -19,7 +19,7 @@ app = FastAPI()
 # 如果前端是從不同 origin 訪問，允許 CORS（開發時可用 *，正式環境請限制來源）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:8000"],  # 前端使用的 URL
+    allow_origins=["*"],  # 前端使用的 URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -55,3 +55,4 @@ async def root():
 
 # include chat router, protected endpoints will use get_current_user
 app.include_router(chat_router, prefix="", tags=["chat"])
+
